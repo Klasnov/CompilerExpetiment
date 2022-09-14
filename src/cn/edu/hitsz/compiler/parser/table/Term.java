@@ -5,13 +5,10 @@ package cn.edu.hitsz.compiler.parser.table;
  * 该类为所有文法符号 (终止符与非终止符) 的基类
  */
 public abstract class Term {
-    /**
-     * 获得该文法符号的名字 (就是出现在文法文件里的描述符)
-     *
-     * @return 名字
-     */
-    public String getTermName() {
-        return termName;
+    private final String termName;
+
+    protected Term(String termName) {
+        this.termName = termName;
     }
 
     @Override
@@ -30,9 +27,12 @@ public abstract class Term {
         return termName;
     }
 
-    protected Term(String termName) {
-        this.termName = termName;
+    /**
+     * 获得该文法符号的名字 (就是出现在文法文件里的描述符)
+     *
+     * @return 名字
+     */
+    public String getTermName() {
+        return termName;
     }
-
-    private final String termName;
 }

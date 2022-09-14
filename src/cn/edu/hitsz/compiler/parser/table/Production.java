@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 /**
  * 表示一条产生式, 你不应该改动此文件
- * <br>
  * 产生式的等价性由其 index 唯一确定. 即, 两条产生式 equals 当且仅当它们 index 相等.
  *
  * @param index 该产生式的索引, 为其在 grammar.txt 文件内的行号, 从 1 开始
