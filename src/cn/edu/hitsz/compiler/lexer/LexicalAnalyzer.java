@@ -4,34 +4,39 @@ import cn.edu.hitsz.compiler.NotImplementedException;
 import cn.edu.hitsz.compiler.symtab.SymbolTable;
 import cn.edu.hitsz.compiler.utils.FileUtils;
 
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.stream.StreamSupport;
 
 /**
  * TODO: 实验一: 实现词法分析
- * <br>
  * 你可能需要参考的框架代码如下:
  *
+ * @author hitsz, klasnov
  * @see Token 词法单元的实现
  * @see TokenKind 词法单元类型的实现
  */
 public class LexicalAnalyzer {
     private final SymbolTable symbolTable;
+    private final ByteBuffer buffer;
 
     public LexicalAnalyzer(SymbolTable symbolTable) {
         this.symbolTable = symbolTable;
+        final int buffSize = 256;
+        buffer = ByteBuffer.allocate(buffSize);
     }
-
 
     /**
      * 从给予的路径中读取并加载文件内容
      *
      * @param path 路径
      */
-    public void loadFile(String path) {
-        // TODO: 词法分析前的缓冲区实现
-        // 可自由实现各类缓冲区
-        // 或直接采用完整读入方法
-        throw new NotImplementedException();
+    public void loadFile(String path) throws IOException {
+        byte[] bytes = Files.readAllBytes(Paths.get(path));
+        buffer.put(bytes);
+        buffer.flip();
     }
 
     /**

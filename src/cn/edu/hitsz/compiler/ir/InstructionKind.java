@@ -2,6 +2,7 @@ package cn.edu.hitsz.compiler.ir;
 
 /**
  * IR 的种类
+ * @author Silidron
  */
 public enum InstructionKind {
     ADD, SUB, MUL, MOV, RET;

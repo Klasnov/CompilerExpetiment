@@ -14,13 +14,14 @@ import cn.edu.hitsz.compiler.utils.FilePathConfig;
 import cn.edu.hitsz.compiler.utils.FileUtils;
 import cn.edu.hitsz.compiler.utils.IREmulator;
 
+import java.io.IOException;
 import java.util.Objects;
 
 /**
  * @author hitsz
  */
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         // 构建符号表以供各部分使用
         TokenKind.loadTokenKinds();
         final var symbolTable = new SymbolTable();

@@ -2,7 +2,6 @@ package cn.edu.hitsz.compiler.parser.table;
 
 /**
  * 文法符号, 你不应该修改此文件
- * <br>
  * 该类为所有文法符号 (终止符与非终止符) 的基类
  */
 public abstract class Term {
