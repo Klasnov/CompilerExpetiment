@@ -5,6 +5,7 @@ import cn.edu.hitsz.compiler.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.LinkedList;
 import java.util.Map;
 
 /**
@@ -15,6 +16,11 @@ import java.util.Map;
  * @author HITSZ
  */
 public class SymbolTable {
+    private LinkedList<SymbolTableEntry> entries;
+
+    public SymbolTable() {
+        this.entries = new LinkedList<>();
+    }
 
     /**
      * 获取符号表中已有的条目
