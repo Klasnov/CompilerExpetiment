@@ -28,12 +28,8 @@ public class SymbolTable {
         for (Token token : tokens) {
             if (token.getKind() == idKind) {
                 String tokenText = token.getText();
-                System.out.println("Find ID, the context is " + tokenText);
-                System.out.println("The exist situation in table is " + entries.containsKey(tokenText));
-                System.out.println();
                 if (!hasSymbol(tokenText)) {
                     entries.put(tokenText, addEntry(tokenText));
-                    System.out.println("Added the ID into table.");
                 }
             }
         }
