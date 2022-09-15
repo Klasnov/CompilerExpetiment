@@ -59,49 +59,52 @@ public class LexicalAnalyzer {
                 scnPt++;
                 bgnPt++;
             }
-            System.out.println(temp + " " + isVain);
+            // System.out.println(temp + " " + isVain);
         } while(isVain);
-        System.out.println("Skipping the space in the outset.");
+        // System.out.println("Skipping the space in the outset.");
         // 扫描代码
         while (scnPt < codeLen) {
             temp = codes.charAt(scnPt++);
-            System.out.println("Temporary char:" + temp);
+            // System.out.println("\nTemporary char:" + temp);
             // 标识符或关键字情况
             if (isLte(temp)) {
-                System.out.println("A id or rvdWd");
+                // System.out.println("An id or reserved word.");
                 do {
                     temp = codes.charAt(scnPt++);
                 } while (isLte(temp) || isNum(temp));
                 str = codes.substring(bgnPt, --scnPt);
-                System.out.println("ID or rvdWd: " + str);
+                // System.out.println("ID or reserved word: " + str);
                 bgnPt = scnPt;
                 switch (str) {
                     case "int", "return" -> tokens.add(Token.simple(str));
                     default -> tokens.add(Token.normal("id", str));
                 }
-                System.out.println("Finished!");
+                // System.out.println("Finished!");
+                continue;
             }
             // 数字常量
             if (isNum(temp)) {
-                System.out.println("A id or rvdWd");
+                // System.out.println("A Number.");
                 do {
                     temp = codes.charAt(scnPt++);
                 } while (isNum(temp));
                 str = codes.substring(bgnPt, --scnPt);
-                System.out.println("Num: " + str);
+                // System.out.println("Number: " + str);
                 bgnPt = scnPt;
                 tokens.add(Token.normal("IntConst", str));
-                System.out.println("Finished!");
+                // System.out.println("Finished!");
+                continue;
             }
             // 格式控制符号
             if (isVain(temp)) {
-                System.out.println("Format Word");
+                // System.out.println("A format word.");
                 bgnPt++;
-                System.out.println("Finished!");
+                // System.out.println("Finished!");
+                continue;
             }
             // 分界符
             if (!isLte(temp) && !isNum(temp) && !isVain(temp)) {
-                System.out.println("Delimiter Word");
+                // System.out.println("A delimiter word.");
                 str = switch (temp) {
                     case '=' -> "=";
                     case ',' -> ",";
@@ -114,14 +117,17 @@ public class LexicalAnalyzer {
                     case  ')' -> ")";
                     default -> "";
                 };
-                System.out.println("Delimiter: " + str);
+                // System.out.println("Delimiter word: " + str);
                 bgnPt++;
                 if (str.compareTo("") != 0) {
+                    // System.out.println("Create the delimiter word token.");
                     tokens.add(Token.simple(str));
                 }
-                System.out.println("Finished!");
+                // System.out.println("Finished!");
             }
         }
+        tokens.add(Token.eof());
+        // System.out.println("\nAdded eof token.");
     }
 
     /**
