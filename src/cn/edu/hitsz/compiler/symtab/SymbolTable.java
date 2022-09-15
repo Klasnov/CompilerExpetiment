@@ -14,7 +14,7 @@ import java.util.*;
  * @author HITSZ
  */
 public class SymbolTable {
-    private Map<String, SymbolTableEntry> entries;
+    private final Map<String, SymbolTableEntry> entries;
 
     public SymbolTable() {
         this.entries = new HashMap<>();
@@ -28,7 +28,13 @@ public class SymbolTable {
         for (Token token : tokens) {
             if (token.getKind() == idKind) {
                 String tokenText = token.getText();
-                entries.put(tokenText, addSymbol(tokenText));
+                System.out.println("Find ID, the context is " + tokenText);
+                System.out.println("The exist situation in table is " + entries.containsKey(tokenText));
+                System.out.println();
+                if (!hasSymbol(tokenText)) {
+                    entries.put(tokenText, addEntry(tokenText));
+                    System.out.println("Added the ID into table.");
+                }
             }
         }
     }
@@ -56,8 +62,8 @@ public class SymbolTable {
      * @return 该符号在符号表中对应的新条目
      * @throws RuntimeException 该符号已在表中存在
      */
-    public SymbolTableEntry addSymbol(String text) {
-        if (hasSymbol(text)) {
+    public SymbolTableEntry addEntry(String text) {
+        if (!hasSymbol(text)) {
             return new SymbolTableEntry(text);
         }
         else {
@@ -72,7 +78,7 @@ public class SymbolTable {
      * @return 该符号的条目是否位于符号表中
      */
     public boolean hasSymbol(String text) {
-        return !entries.containsKey(text);
+        return entries.containsKey(text);
     }
 
     /**

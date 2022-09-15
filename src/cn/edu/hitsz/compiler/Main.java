@@ -33,6 +33,7 @@ public class Main {
         lexer.run();
         lexer.dumpTokens(FilePathConfig.TOKEN_PATH);
         final var tokens = lexer.getTokens();
+        symbolTable.anlTkn(tokens);
         symbolTable.dumpTable(FilePathConfig.OLD_SYMBOL_TABLE);
 
         // 读取第三方程序构造的 LR 分析表
