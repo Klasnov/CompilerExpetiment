@@ -1,12 +1,10 @@
 package cn.edu.hitsz.compiler.symtab;
 
-import cn.edu.hitsz.compiler.NotImplementedException;
+import cn.edu.hitsz.compiler.lexer.Token;
+import cn.edu.hitsz.compiler.lexer.TokenKind;
 import cn.edu.hitsz.compiler.utils.FileUtils;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.LinkedList;
-import java.util.Map;
+import java.util.*;
 
 /**
  * 符号表
@@ -16,10 +14,23 @@ import java.util.Map;
  * @author HITSZ
  */
 public class SymbolTable {
-    private LinkedList<SymbolTableEntry> entries;
+    private Map<String, SymbolTableEntry> entries;
 
     public SymbolTable() {
-        this.entries = new LinkedList<>();
+        this.entries = new HashMap<>();
+    }
+
+    /**
+     * 解析 Token 列表，从中获取到变量并加入字符表汇中
+     */
+    public void anlTkn(Iterable<Token> tokens) {
+        TokenKind idKind = TokenKind.fromString("id");
+        for (Token token : tokens) {
+            if (token.getKind() == idKind) {
+                String tokenText = token.getText();
+                entries.put(tokenText, addSymbol(tokenText));
+            }
+        }
     }
 
     /**
@@ -30,7 +41,12 @@ public class SymbolTable {
      * @throws RuntimeException 该符号在表中不存在
      */
     public SymbolTableEntry get(String text) {
-        throw new NotImplementedException();
+        if (hasSymbol(text)) {
+            return entries.get(text);
+        }
+        else {
+            throw new RuntimeException("Symbol Doesn't Exist");
+        }
     }
 
     /**
@@ -40,8 +56,13 @@ public class SymbolTable {
      * @return 该符号在符号表中对应的新条目
      * @throws RuntimeException 该符号已在表中存在
      */
-    public SymbolTableEntry add(String text) {
-        throw new NotImplementedException();
+    public SymbolTableEntry addSymbol(String text) {
+        if (hasSymbol(text)) {
+            return new SymbolTableEntry(text);
+        }
+        else {
+            throw new RuntimeException("Symbol Has Already In Table");
+        }
     }
 
     /**
@@ -50,8 +71,8 @@ public class SymbolTable {
      * @param text 待判断符号的文本表示
      * @return 该符号的条目是否位于符号表中
      */
-    public boolean has(String text) {
-        throw new NotImplementedException();
+    public boolean hasSymbol(String text) {
+        return !entries.containsKey(text);
     }
 
     /**
@@ -60,7 +81,7 @@ public class SymbolTable {
      * @return 符号表的所有条目
      */
     private Map<String, SymbolTableEntry> getAllEntries() {
-        throw new NotImplementedException();
+        return entries;
     }
 
     /**
@@ -71,13 +92,10 @@ public class SymbolTable {
     public void dumpTable(String path) {
         final var entriesInOrder = new ArrayList<>(getAllEntries().values());
         entriesInOrder.sort(Comparator.comparing(SymbolTableEntry::getText));
-
         final var lines = new ArrayList<String>();
         for (final var entry : entriesInOrder) {
-            // null in %s will be "null"
             lines.add("(%s, %s)".formatted(entry.getText(), entry.getType()));
         }
-
         FileUtils.writeLines(path, lines);
     }
 }
