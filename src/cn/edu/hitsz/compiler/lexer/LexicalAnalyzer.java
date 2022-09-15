@@ -59,37 +59,49 @@ public class LexicalAnalyzer {
                 scnPt++;
                 bgnPt++;
             }
+            System.out.println(temp + " " + isVain);
         } while(isVain);
+        System.out.println("Skipping the space in the outset.");
         // 扫描代码
         while (scnPt < codeLen) {
             temp = codes.charAt(scnPt++);
+            System.out.println("Temporary char:" + temp);
             // 标识符或关键字情况
             if (isLte(temp)) {
+                System.out.println("A id or rvdWd");
                 do {
                     temp = codes.charAt(scnPt++);
                 } while (isLte(temp) || isNum(temp));
                 str = codes.substring(bgnPt, --scnPt);
+                System.out.println("ID or rvdWd: " + str);
                 bgnPt = scnPt;
                 switch (str) {
                     case "int", "return" -> tokens.add(Token.simple(str));
                     default -> tokens.add(Token.normal("id", str));
                 }
+                System.out.println("Finished!");
             }
             // 数字常量
             if (isNum(temp)) {
+                System.out.println("A id or rvdWd");
                 do {
                     temp = codes.charAt(scnPt++);
                 } while (isNum(temp));
                 str = codes.substring(bgnPt, --scnPt);
+                System.out.println("Num: " + str);
                 bgnPt = scnPt;
                 tokens.add(Token.normal("IntConst", str));
+                System.out.println("Finished!");
             }
             // 格式控制符号
             if (isVain(temp)) {
+                System.out.println("Format Word");
                 bgnPt++;
+                System.out.println("Finished!");
             }
             // 分界符
             if (!isLte(temp) && !isNum(temp) && !isVain(temp)) {
+                System.out.println("Delimiter Word");
                 str = switch (temp) {
                     case '=' -> "=";
                     case ',' -> ",";
@@ -102,8 +114,12 @@ public class LexicalAnalyzer {
                     case  ')' -> ")";
                     default -> "";
                 };
+                System.out.println("Delimiter: " + str);
                 bgnPt++;
-                tokens.add(Token.simple(str));
+                if (str.compareTo("") != 0) {
+                    tokens.add(Token.simple(str));
+                }
+                System.out.println("Finished!");
             }
         }
     }
