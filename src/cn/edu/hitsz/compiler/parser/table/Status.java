@@ -8,7 +8,6 @@ import java.util.Map;
 
 /**
  * 表示 LR 分析表中的一个状态, 你不应该修改此文件
- * <br>
  * 状态的等价性由其编号唯一决定. 即两状态 equals 当且仅当它们的 index 相同
  *
  * @param index  状态在 LR 表中的索引/编号

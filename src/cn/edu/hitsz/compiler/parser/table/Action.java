@@ -5,7 +5,9 @@ import java.util.Objects;
 /**
  * 代表 LR 分析表 action 表中的一个动作, 你不应该修改此文件
  */
-public class Action {
+public record Action(cn.edu.hitsz.compiler.parser.table.Action.ActionKind kind,
+                     Production production,
+                     Status status) {
     public enum ActionKind {Reduce, Shift, Accept, Error}
 
     /**
@@ -50,7 +52,6 @@ public class Action {
         if (kind != ActionKind.Reduce) {
             throw new RuntimeException("Only reduce action could have a production");
         }
-
         assert production != null;
         return production;
     }
@@ -63,7 +64,6 @@ public class Action {
         if (kind != ActionKind.Shift) {
             throw new RuntimeException("Only shift action could hava a status");
         }
-
         assert status != null;
         return status;
     }
@@ -81,8 +81,8 @@ public class Action {
     @Override
     public boolean equals(Object obj) {
         return obj instanceof Action action
-            && action.getKind().equals(kind)
-            && switch (kind) {
+                && action.getKind().equals(kind)
+                && switch (kind) {
             case Shift -> action.status.equals(status);
             case Reduce -> action.production.equals(production);
             case Accept, Error -> true;
@@ -97,13 +97,4 @@ public class Action {
     private static final Action acceptInstance = new Action(ActionKind.Accept, null, null);
     private static final Action errorInstance = new Action(ActionKind.Error, null, null);
 
-    private Action(ActionKind kind, Production production, Status status) {
-        this.kind = kind;
-        this.production = production;
-        this.status = status;
-    }
-
-    private final ActionKind kind;
-    private final Production production;
-    private final Status status;
 }
