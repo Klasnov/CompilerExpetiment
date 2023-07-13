@@ -24,11 +24,11 @@ import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        // 构建符号表以供各部分使用
+        // Build symbol tables for use by various parts
         TokenKind.loadTokenKinds();
         final var symbolTable = new SymbolTable();
 
-        // 词法分析
+        // lexical analysis
         final var lexer = new LexicalAnalyzer(symbolTable);
         lexer.loadFile(FilePathConfig.SRC_CODE_PATH);
         lexer.run();
@@ -37,46 +37,46 @@ public class Main {
         symbolTable.anlTkn(tokens);
         symbolTable.dumpTable(FilePathConfig.OLD_SYMBOL_TABLE);
 
-        // 使用框架自带部分直接从 grammar.txt 构造 LR 分析表
+        // Construct LR analysis table from grammar.txt
         final var tableGenerator = new TableGenerator();
         tableGenerator.run();
         final var lrTable = tableGenerator.getTable();
         lrTable.dumpTable("data/out/lrTable.csv");
 
-        // 加载 LR 分析驱动程序
+        // Load LR analysis driver
         final var parser = new SyntaxAnalyzer(symbolTable);
         parser.loadTokens(tokens);
         parser.loadLRTable(lrTable);
 
-        // 加入生成规约列表的 Observer
+        // Join the Observer that generates the list of specifications
         final var productionCollector = new ProductionCollector(GrammarInfo.getBeginProduction());
         parser.registerObserver(productionCollector);
 
-        // 加入用作语义检查的 Observer
-        // final var semanticAnalyzer = new SemanticAnalyzer();
-        // parser.registerObserver(semanticAnalyzer);
+        // Add Observer for semantic checking
+        final var semanticAnalyzer = new SemanticAnalyzer();
+        parser.registerObserver(semanticAnalyzer);
 
-        // 加入用作 IR 生成的 Observer
-        // final var irGenerator = new IRGenerator();
-        // parser.registerObserver(irGenerator);
+        // Add Observer for IR generation
+        final var irGenerator = new IRGenerator();
+        parser.registerObserver(irGenerator);
 
-        // 执行语法解析并在解析过程中依次调用各 Observer
+        // Perform syntax parsing and call each Observer in turn during parsing
         parser.run();
 
-        // 各 Observer 输出结果
+        // Output results of each Observer
         productionCollector.dumpToFile(FilePathConfig.PARSER_PATH);
-        // symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
-        // final var instructions = irGenerator.getIR();
-        // irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
+        symbolTable.dumpTable(FilePathConfig.NEW_SYMBOL_TABLE);
+        final var instructions = irGenerator.getIR();
+        irGenerator.dumpIR(FilePathConfig.INTERMEDIATE_CODE_PATH);
 
-        // 模拟执行 IR 并输出结果
+        // Simulate the execution of IR and output the result
         // final var emulator = IREmulator.load(instructions);
         // FileUtils.writeFile(FilePathConfig.EMULATE_RESULT, emulator.execute().map(Objects::toString).orElse("No return value"));
 
-        // 由 IR 生成汇编
-        // final var asmGenerator = new AssemblyGenerator();
-        // asmGenerator.loadIR(instructions);
-        // asmGenerator.run();
-        // asmGenerator.dump(FilePathConfig.ASSEMBLY_LANGUAGE_PATH);
+        // Generate assembly file from IR
+        final var asmGenerator = new AssemblyGenerator();
+        asmGenerator.loadIR(instructions);
+        asmGenerator.run();
+        asmGenerator.dump(FilePathConfig.ASSEMBLY_LANGUAGE_PATH);
     }
 }
